@@ -343,11 +343,41 @@ Full images include: Docker, VSCode Web (port 8001), VNC desktop, Chromium, GitH
 
 ## Chromium
 
-The agent server's browser tool requires Chromium via Playwright:
+The agent server's browser tool requires Chromium via Playwright. You MUST install this.
 
-```bash
-cd ~/git/software-agent-sdk
-uvx playwright install chromium --with-deps
+## Chromium Requirement
+
+The agent server requires Chromium for browser tool operations. Without it, the
+server will throw an exception when initializing the browser tool:
+
+```
+Exception: Chromium is required for browser operations but is not installed.
 ```
 
-When running as root, the server automatically adds `--no-sandbox` to Chromium launch args. The `--with-deps` flag installs system libraries needed by headless Chromium.
+### Installation
+
+Install Chromium via Playwright (recommended):
+
+```bash
+uvx playwright install chromium --no-shell
+```
+
+To also install system-level dependencies (requires sudo):
+
+```bash
+uvx playwright install chromium --with-deps --no-shell
+```
+
+The Chromium binary is installed to `~/.cache/ms-playwright/chromium-*/`.
+
+### Troubleshooting
+
+If `--with-deps` fails due to lack of sudo access, install Chromium without
+system deps first (`--no-shell` only), then manually install any missing shared
+libraries reported at runtime. Common missing libraries on Ubuntu/Debian can be
+installed with:
+
+```bash
+sudo apt-get install -y libnss3 libatk1.0-0 libatk-bridge2.0-0 \
+  libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 \
+  libxfixes3 libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2
