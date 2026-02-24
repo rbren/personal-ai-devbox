@@ -47,8 +47,8 @@ Command-line flags:
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `OH_SESSION_API_KEYS_0` | Recommended | API key for authenticating requests. Sent as `Authorization: Bearer <key>` or `X-Session-API-Key` header. Empty = no auth. |
-| `SESSION_API_KEY` | — | Legacy alias for `OH_SESSION_API_KEYS_0` |
+| `OH_SESSION_API_KEYS_0` | Recommended | API key for authenticating requests. Sent as `Authorization: Bearer <key>` or `X-Session-API-Key` header. If not set, auth is disabled (open access). |
+`SESSION_API_KEY` | — | Legacy alias for `OH_SESSION_API_KEYS_0` |
 | `OH_SECRET_KEY` | Recommended | Encryption key for persisting LLM API keys and conversation secrets across restarts. Without it, secrets are redacted on disk and lost on restart. |
 | `OH_ALLOW_CORS_ORIGINS` | — | JSON array of allowed CORS origins (localhost always allowed) |
 | `OH_CONVERSATIONS_PATH` | `workspace/conversations` | Where conversation data is stored |
@@ -166,7 +166,8 @@ Events are the core data model. Every action and observation in a conversation i
 
 ## Creating a Conversation
 
-A `POST /api/conversations` request body looks like:
+A `POST /api/conversations` request body looks like this. You should set the workspace based on
+where the user keeps their code.
 
 ```json
 {
@@ -185,7 +186,7 @@ A `POST /api/conversations` request body looks like:
     ]
   },
   "workspace": {
-    "working_dir": "/workspace/project"
+    "working_dir": "/home/username/git/todo-list"
   },
   "initial_message": {
     "role": "user",
@@ -198,6 +199,8 @@ A `POST /api/conversations` request body looks like:
   "max_iterations": 500
 }
 ```
+
+**⚠️ `working_dir` must be an absolute, writable path that exists on the host.** If it doesn't exist or isn't writable, conversation creation will fail with a 500 error (the server calls `Path(working_dir).mkdir(parents=True, exist_ok=True)` internally, and it crashes if the parent path is invalid). Use a real directory like `/tmp/workspace`.
 
 **Tool names are lowercase snake_case.** The registered tools are:
 
@@ -256,16 +259,43 @@ import {
 } from '@openhands/typescript-client';
 
 // Create a conversation
-const agent = new Agent({ llm: { model, api_key: apiKey } });
+const agent = new Agent({
+  llm: { model, api_key: apiKey },
+  tools: [
+    { name: 'terminal' },
+    { name: 'file_editor' },
+    { name: 'browser_tool_set' },
+    { name: 'glob' },
+    { name: 'grep' },
+  ],
+});
 const workspace = new Workspace({
   host: 'http://localhost:4004',
-  workingDir: '/workspace',
+  workingDir: '/tmp/workspace',
   apiKey: sessionKey,
 });
 const conv = new Conversation(agent, workspace, { callback: onEvent });
 await conv.start({ initialMessage: 'Hello!' });
 await conv.startWebSocketClient();
 await conv.run();
+```
+
+### Reconnecting to an Existing Conversation
+
+To reconnect to a conversation that already exists (e.g. after a page reload), pass the `conversationId` and omit the `initialMessage`:
+
+```typescript
+const conv = new Conversation(agent, workspace, {
+  conversationId,       // existing conversation ID
+  callback: onEvent,    // live event handler
+});
+await conv.start();                          // connect without initial message
+const history = await conv.state.events.getEvents();
+const status = await conv.state.getAgentStatus();
+await conv.startWebSocketClient();           // subscribe to live events
+
+// Cleanup when unmounting:
+conv.stopWebSocketClient()
 ```
 
 ## Relationship to This Project
