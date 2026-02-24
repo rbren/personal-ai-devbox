@@ -10,7 +10,7 @@ This project is released as Open Prompt, rather than Open Source. There are a fe
 * My code is hyper-tailored to my own needs
 * and it's vibecoded mess that happens to mostly work
 
-You don't want my vibecoded mess. You want *your* vibecoded mess. The one whose intricacies and quirks and powers only you know.
+You don't want my vibecoded mess. You want *your* vibecoded mess, whose intricacies and quirks and powers only you know.
 
 -------
 
