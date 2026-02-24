@@ -102,7 +102,8 @@ When **standalone**:
 
 Stored in localStorage. agentServerURL and sessionKey should be hard-coded based on where/how the agent-server is running.
 
-If model and/or apiKey are unset, show the modal when the user loads the page to prompt them for it.
+If model and/or apiKey are unset, show the modal when the user loads the page to prompt them for it. The list of available models and providers
+is available via the agent-server API, use this to pre-populate a dropdown. Specifically show the `verified` models since these are guaranteed to work.
 
 ```json
 {
