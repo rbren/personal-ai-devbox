@@ -65,13 +65,11 @@ src/
     ConversationList.tsx — sidebar conversation list
     EventBubble.tsx    — renders individual conversation events
     PlanPane.tsx       — right-side pane showing agent's plan file
-    SettingsModal.tsx  — settings dialog (model, API key, etc.)
   hooks/
     useAgentConversation.ts — streams events from a conversation
     useConversationList.ts  — fetches/manages conversation list
-    useLlmOptions.ts        — fetches available LLM models
     useProjects.ts          — fetches git projects for working dir picker
-    useSettings.ts          — reads/writes assistant settings
+    useSettings.ts          — reads/writes assistant settings (from localStorage, synced with LLM app)
   utils/
     createConversation.ts   — helper to POST a new conversation
 ```
@@ -80,7 +78,7 @@ src/
 
 Three-column layout:
 
-1. **ConversationList** (left sidebar): searchable conversation list with new chat button, refresh, delete, rename, settings gear. Collapsible via toggle.
+1. **ConversationList** (left sidebar): searchable conversation list with new chat button, refresh, delete, rename. Collapsible via toggle.
 2. **ChatView** (center): streams conversation events in real-time, shows input box for sending messages
 3. **PlanPane** (right): displays the contents of `PLAN.md` from the conversation's working directory
 
@@ -100,10 +98,11 @@ When **standalone**:
 
 ### Settings
 
-Stored in localStorage. agentServerURL and sessionKey should be hard-coded based on where/how the agent-server is running.
+LLM settings (model, API key, base URL, session key) are configured in the separate **LLM app** (`apps/llm/`, see `prompts/llm.md`), not in the conversations app. The conversations app no longer has its own settings modal.
 
-If model and/or apiKey are unset, show the modal when the user loads the page to prompt them for it. The list of available models and providers
-is available via the agent-server API, use this to pre-populate a dropdown. Specifically show the `verified` models since these are guaranteed to work.
+The `useSettings` hook reads settings from `localStorage` (key `openhands-chat-settings`) and listens for `storage` events so changes made in the LLM app propagate immediately across iframes without a page reload. Settings are passed as context to conversation creation.
+
+The underlying data lives in `~/.openhands/remote/assistant-settings.json`:
 
 ```json
 {
@@ -114,9 +113,6 @@ is available via the agent-server API, use this to pre-populate a dropdown. Spec
 }
 ```
 
-The `SettingsModal` lets the user configure these values. The `useSettings` hook reads them and provides an `updateSettings` function. The settings are passed as context to conversation creation and the LLM options hook.
-
-If the 
 
 ### Creating Conversations
 

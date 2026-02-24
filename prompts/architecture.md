@@ -69,6 +69,7 @@ Each app has a `start.sh` that launches the backend (uvicorn) and frontend (npm 
 | hud           | 4021     | —       |
 | mcp           | 4022     | 4023    |
 | kanban        | 4025     | —       |
+| llm           | 4026     | 4027    |
 
 ## Shared Dependencies
 
@@ -85,7 +86,7 @@ Most app state is stored as JSON files under `~/.openhands/remote/`:
 | File | Used by |
 |------|---------|
 | `secrets.json` | Secrets app; also injected into conversations by SMS and Scheduled apps |
-| `assistant-settings.json` | Scheduled, SMS, Conversations — stores `agentServerUrl`, `model`, `apiKey`, `sessionKey` |
+| `assistant-settings.json` | LLM, Scheduled, SMS, Conversations — stores `agentServerUrl`, `model`, `apiKey`, `sessionKey`, `baseUrl` |
 | `mcp.json` | MCP app — stores MCP server configurations |
 | `sms-messages.json` | SMS app — log of received SMS messages |
 | `scheduled-prompts/` | Scheduled app — prompt text files referenced by crontab entries |

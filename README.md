@@ -61,6 +61,10 @@ Draggable card dashboard for monitoring live conversations in real time.
 
 ![hud](prompts/hud.png)
 
+### LLM
+
+Settings page for choosing an LLM provider, model, and API key.
+
 ### Secrets
 
 Key-value secret store injected into new conversations.

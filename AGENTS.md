@@ -25,6 +25,7 @@ contribute back to this repository (https://github.com/rbren/personal-ai-devbox)
 | `prompts/logs.md` | Log file viewer with tailing |
 | `prompts/mcp.md` | MCP server configuration editor (`~/.openhands/remote/mcp.json`) |
 | `prompts/conversations.md` | Chat UI for OpenHands agent-server conversations |
+| `prompts/llm.md` | LLM settings page (model, API key, base URL) — reads model list from agent-server |
 | `prompts/scheduled.md` | Cron-based scheduled conversation launcher |
 | `prompts/sms.md` | Twilio SMS webhook that creates agent conversations |
 | `prompts/hud.md` | Draggable card dashboard for monitoring live conversations |
@@ -52,6 +53,7 @@ These apps have no build-time or runtime dependencies on other apps. They can al
 - `prompts/skills.md`
 - `prompts/logs.md`
 - `prompts/mcp.md`
+- `prompts/llm.md`
 
 ### Phase 2 — Conversations (after Phase 0)
 
@@ -93,7 +95,8 @@ architecture.md + agent-server.md
  ├── terminal.md      ──┤
  ├── skills.md        ──┤
  ├── logs.md          ──┤
- ├── mcp.md           ──┘
+ ├── mcp.md           ──┤
+ ├── llm.md           ──┘
  │
  ├── conversations.md       ← Phase 2
  │    └── hud.md            ← Phase 3
