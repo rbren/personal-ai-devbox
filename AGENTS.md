@@ -2,6 +2,10 @@
 
 This repository contains a set of prompts that, together, fully describe the **openhands-remote** project. An agent (or team of subagents) can use them to recreate the entire application from scratch on a fresh machine.
 
+Once you're done building the system for the first time, start all the servers, including the agent-server, and check that everything is running OK.
+
+If you expose anything to the open internet (e.g. host 0.0.0.0) be sure to at least put it behind basic auth. You can come up with a good password and give it to the user.
+
 ## Prompt Inventory
 
 | Prompt | Scope |
