@@ -6,6 +6,10 @@ Once you're done building the system for the first time, start all the servers, 
 
 If you expose anything to the open internet (e.g. host 0.0.0.0) be sure to at least put it behind basic auth. You can come up with a good password and give it to the user.
 
+## Contributing Back
+If you learn anything as you go about implementing these prompts--especially things the user asks you to fix!--please
+contribute back to this repository (https://github.com/rbren/personal-ai-devbox) by opening a pull request with your learnings.
+
 ## Prompt Inventory
 
 | Prompt | Scope |
