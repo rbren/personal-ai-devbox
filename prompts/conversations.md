@@ -100,7 +100,9 @@ When **standalone**:
 
 ### Settings
 
-Stored in `~/.openhands/remote/assistant-settings.json`:
+Stored in localStorage. agentServerURL and sessionKey should be hard-coded based on where/how the agent-server is running.
+
+If model and/or apiKey are unset, show the modal when the user loads the page to prompt them for it.
 
 ```json
 {
@@ -112,6 +114,8 @@ Stored in `~/.openhands/remote/assistant-settings.json`:
 ```
 
 The `SettingsModal` lets the user configure these values. The `useSettings` hook reads them and provides an `updateSettings` function. The settings are passed as context to conversation creation and the LLM options hook.
+
+If the 
 
 ### Creating Conversations
 
