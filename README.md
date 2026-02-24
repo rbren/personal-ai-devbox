@@ -14,7 +14,7 @@ You don't want my vibecoded mess. You want *your* vibecoded mess, whose intricac
 
 -------
 
-You can start by giving this README to the [coding agent of your choice](https://docs.openhands.dev/openhands/usage/cli/installation).
+You can start by giving this README to the [coding agent](https://docs.openhands.dev/openhands/usage/cli/installation) of your choice.
 Just paste the URL and hit go I guess.
 
 It'll probably do something like:
