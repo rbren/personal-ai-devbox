@@ -17,6 +17,8 @@ Browser (HTTPS :443)
 
 All traffic enters through nginx on ports 80/443. HTTP redirects to HTTPS. Internally, every service communicates over plain HTTP on localhost.
 
+The OpenHands agent server (port 4004) is the backend for all conversation-related apps. See [`prompts/agent-server.md`](agent-server.md) for full API documentation, configuration, event types, and TypeScript client usage.
+
 ## Homepage Shell
 
 `homepage/index.html` is a single-page app shell that contains:
@@ -72,7 +74,7 @@ Each app has a `start.sh` that launches the backend (uvicorn) and frontend (npm 
 
 Several apps share code via Vite aliases:
 
-- **`@openhands/typescript-client`**: A local build of the [OpenHands TypeScript client](https://github.com/openhands/typescript-client) at `~/git/typescript-client/dist/`. Used by conversations, hud, and kanban for talking to the agent server.
+- **`@openhands/typescript-client`**: A local build of the [OpenHands TypeScript client](https://github.com/openhands/typescript-client) at `~/git/typescript-client/dist/`. Used by conversations, hud, and kanban for talking to the agent server. See [`prompts/agent-server.md`](agent-server.md) for API details and the typescript-client's [`frontend.md` skill](https://github.com/OpenHands/typescript-client/blob/main/.agent/skills/frontend.md) for React integration patterns.
 - **`@assistant`**: Points to `apps/conversations/src/` — allows hud and kanban to import conversation hooks and components.
 - **`@hud`**: Points to `apps/hud/src/` — allows kanban to import HUD hooks and components.
 

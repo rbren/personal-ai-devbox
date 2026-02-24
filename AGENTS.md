@@ -7,6 +7,7 @@ This repository contains a set of prompts that, together, fully describe the **o
 | Prompt | Scope |
 |--------|-------|
 | `prompts/architecture.md` | Project structure, nginx, SSL, basic auth, fail2ban, homepage shell, shared deps, Docker, data storage, port map |
+| `prompts/agent-server.md` | OpenHands agent server: REST/WebSocket API, configuration, Docker images, TypeScript client, event types |
 | `prompts/status.md` | System status dashboard (CPU, memory, disk, processes, ports, network) |
 | `prompts/files.md` | File browser and editor |
 | `prompts/projects.md` | Git project listing for `~/git/` |
@@ -25,9 +26,11 @@ This repository contains a set of prompts that, together, fully describe the **o
 
 ### Phase 0 — Foundation (must be first)
 
-**`prompts/architecture.md`**
+**`prompts/architecture.md`** + **`prompts/agent-server.md`**
 
-Sets up the host: nginx config, SSL certs, basic auth, fail2ban, the homepage shell, the `apps/` directory layout, and shared tooling. Everything else depends on this.
+`prompts/architecture.md` sets up the host: nginx config, SSL certs, basic auth, fail2ban, the homepage shell, the `apps/` directory layout, and shared tooling. Everything else depends on this.
+
+`prompts/agent-server.md` documents the OpenHands agent server that powers all conversations. It covers the REST and WebSocket APIs, configuration, environment variables, event types, Docker images, and the TypeScript client. Any app that creates or streams conversations needs this as context.
 
 ### Phase 1 — Standalone apps (parallelizable)
 
@@ -74,7 +77,7 @@ These two can be built **in parallel**.
 ## Dependency Graph
 
 ```
-architecture.md
+architecture.md + agent-server.md
  ├── status.md        ──┐
  ├── files.md         ──┤
  ├── projects.md      ──┤  Phase 1 (parallel)
@@ -111,7 +114,7 @@ These are runtime-only; violating them won't break the build but will cause runt
 
 ## Tips for Subagent Delegation
 
-- **Give each subagent one prompt file** plus `prompts/architecture.md` as context so it understands the overall conventions (port assignments, directory layout, dark theme colors, API prefix pattern, etc.).
+- **Give each subagent one prompt file** plus `prompts/architecture.md` as context so it understands the overall conventions (port assignments, directory layout, dark theme colors, API prefix pattern, etc.). For apps that interact with the agent server (conversations, hud, kanban, scheduled, sms), also include `prompts/agent-server.md`.
 - **Phase 1 apps are ideal for parallel subagents** — they're self-contained, follow the exact same frontend/backend pattern, and have zero cross-app imports.
 - **Phases 2–4 must be sequential** due to the import chain. A single subagent handling all three may be simpler than coordinating handoffs.
 - **After all apps are built**, a final agent should wire up `homepage/index.html` (nav items + iframe entries), update `nginx.conf` with all location blocks, and run a smoke test.
