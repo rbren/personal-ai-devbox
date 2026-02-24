@@ -195,6 +195,13 @@ The Logs app provides a web UI to browse and tail these files.
 
 Multiple apps create agent conversations independently (Conversations, Scheduled, SMS) and each one assembles the conversation payload itself — reading `assistant-settings.json`, `secrets.json`, `mcp.json`, default tool lists, etc. This means the logic for "how to start a conversation with the right config" is duplicated across all three backends. If you change how secrets are injected, add a new default tool, or alter the MCP payload shape, you need to update every app that creates conversations or they'll silently diverge. This is the biggest maintenance footprint in the project and a likely source of subtle bugs.
 
+### Paths and routing
+
+The architecture of putting sub apps into iframes makes routing a little tricky. You should set up nginx to allow
+deep linking. E.g. the user might want to load /conversations/{id}. This should show the chrome on the homepage,
+then load the iframe so that the conversations UI shows the conversation. You will probably need to mess with
+history state directly to support deep linking and the back button at the same time.
+
 ## Security
 
 This machine has full shell access exposed through web UIs, APIs, and an AI agent that can execute arbitrary code. If an attacker gets in, they own everything.
