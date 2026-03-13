@@ -1,5 +1,7 @@
 # Personal AI Development Environment
 
+![conversations](prompts/conversations.png)
+
 If you're the kind of person that likes tweaking your dotfiles, your tmux config, your vim setup, your VS Code plugins--this is maybe the most fun you'll ever have building something. It's the first time I've felt a sustained flow state while coding with AI.
 
 The goal is to create a personalized AI-powered development environment.
