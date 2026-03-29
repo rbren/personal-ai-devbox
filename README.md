@@ -6,8 +6,8 @@ The goal is to create a personalized AI-powered development environment.
 Something that works the way _you_ want it to.
 
 The setup described here encourages _live coding_: you modify the interface while you're using it.
-This can get a little funky (you may need to drop back down to the command line if you break
-things too badly) but the live feedback loop is addictive.
+This can get a little funky--you may need to drop back down to the command line if you break
+things too badly. But the live feedback loop is addictive.
 
 ![conversations](prompts/conversations.png)
 
