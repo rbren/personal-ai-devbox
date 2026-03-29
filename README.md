@@ -5,8 +5,8 @@ If you're the kind of person that likes tweaking your dotfiles, your tmux config
 The goal is to create a personalized AI-powered development environment.
 Something that works the way _you_ want it to.
 
-The setup described here is also meant to enable _live coding_ your developer interface as you're using it. It can get a little funky (you
-may need to drop back down to the command line if you break things too badly) but the live feedback loop is tremendously rewarding.
+The setup described here enables _live coding_: you can modify your developer interface as you're using it. This can get a little funky (you
+may need to drop back down to the command line if you break things too badly) but the live feedback loop is addictive.
 
 ![conversations](prompts/conversations.png)
 
