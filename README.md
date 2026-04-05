@@ -44,11 +44,15 @@ good luck have fun
 
 ## Features
 
-### Conversations
+### Code (Conversations)
 
-Chat UI for creating and streaming agent conversations using the [OpenHands SDK](https://github.com/OpenHands/software-agent-sdk).
+Chat UI for creating and streaming agent conversations using the [OpenHands SDK](https://github.com/OpenHands/software-agent-sdk). Includes a control bar for tuning agent behavior (planning depth, verification, git strategy), a resizable git status panel, and support for subagent delegation.
 
 ![conversations](prompts/conversations.png)
+
+### Vibe
+
+Chat-first vibecoding interface for rapid prototyping. The agent builds HTML/CSS/JS artifacts that render live in a preview pane next to the chat. Uses its own agent-server instance and artifact storage.
 
 ### Kanban
 

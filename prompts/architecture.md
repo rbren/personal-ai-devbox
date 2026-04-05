@@ -23,10 +23,12 @@ The OpenHands agent server (port 4004) is the backend for all conversation-relat
 
 `homepage/index.html` is a single-page app shell that contains:
 
-- A collapsible left sidebar with nav links grouped into **Agents**, **Settings**, and **System** sections.
+- A collapsible left sidebar (collapsed by default) with nav links grouped into **Agents**, **Settings**, and **System** sections. Collapsed mode shows only icons with slide-out drawer labels on hover.
 - A set of hidden `<iframe>` elements, one per app. Clicking a nav item shows the corresponding iframe and lazy-loads its `src` on first activation.
 - URL routing: paths like `/conversations`, `/status`, `/files`, etc. all serve `index.html` via nginx, and the shell JavaScript activates the matching iframe.
-- The conversations app communicates with the parent shell via `postMessage` to keep the browser URL in sync when navigating between conversations.
+- The conversations and vibe apps communicate with the parent shell via `postMessage` to keep the browser URL in sync when navigating between conversations.
+- A **Power Cycle** button at the bottom of the nav that POSTs to `/apps/status/api/restart`, polls until the status backend is back up, then reloads all visible iframes.
+- A **mini chat FAB** (floating action button) in the bottom-right corner — an Intercom-style quick chat that creates lightweight agent conversations for quick questions without leaving the current page. The mini chat agent has limited tools (file_editor, glob, grep) and a custom system prompt loaded from `homepage/mini-chat-prompt.j2`.
 
 ## App Pattern
 
@@ -57,7 +59,7 @@ Each app has a `start.sh` that launches the backend (uvicorn) and frontend (npm 
 | App           | Frontend | Backend |
 |---------------|----------|---------|
 | status        | 4001     | 4002    |
-| conversations | 4003     | 4004    |
+| conversations | 4003     | 4004 (agent-server), 4044 (git) |
 | files         | 4005     | 4006    |
 | projects      | 4007     | 4008    |
 | secrets       | 4009     | 4010    |
@@ -70,13 +72,15 @@ Each app has a `start.sh` that launches the backend (uvicorn) and frontend (npm 
 | mcp           | 4022     | 4023    |
 | kanban        | 4025     | —       |
 | llm           | 4026     | 4027    |
+| vibe          | 4040     | 4041 (agent-server), 4042 (artifacts) |
 
 ## Shared Dependencies
 
 Several apps share code via Vite aliases:
 
-- **`@openhands/typescript-client`**: A local build of the [OpenHands TypeScript client](https://github.com/openhands/typescript-client) at `~/git/typescript-client/dist/`. Used by conversations, hud, and kanban for talking to the agent server. See [`prompts/agent-server.md`](agent-server.md) for API details and the typescript-client's [`frontend.md` skill](https://github.com/OpenHands/typescript-client/blob/main/.agent/skills/frontend.md) for React integration patterns.
-- **`@assistant`**: Points to `apps/conversations/src/` — allows hud and kanban to import conversation hooks and components.
+- **`@openhands/typescript-client`**: A local build of the [OpenHands TypeScript client](https://github.com/openhands/typescript-client) at `~/git/typescript-client/dist/`. Used by conversations, vibe, hud, and kanban for talking to the agent server. See [`prompts/agent-server.md`](agent-server.md) for API details and the typescript-client's [`frontend.md` skill](https://github.com/OpenHands/typescript-client/blob/main/.agent/skills/frontend.md) for React integration patterns.
+- **`@shared`**: Points to `apps/shared/` — shared components (ConversationList, ChatView, EventBubble, ActionGroup), hooks (useSettings, useConversationList, useAgentConversation, useProjects), and utilities (conversationSetup, eventHelpers, markdownComponents). Used by conversations, vibe, hud, and kanban.
+- **`@assistant`**: Points to `apps/conversations/src/` — allows hud and kanban to import conversations-specific hooks and components.
 - **`@hud`**: Points to `apps/hud/src/` — allows kanban to import HUD hooks and components.
 
 ## Data Storage
@@ -112,6 +116,11 @@ Key behaviors:
 - **`merge_slashes off`** so file paths like `//tmp/file` pass through correctly
 - **Proxy timeout** of 3600s for the terminal WebSocket connection
 - Each app gets two `location` blocks: one for the frontend (Vite dev server) and one for the backend API
+- **Frontend modes**: Some apps (status, files, terminal, logs) support switching between a Vite dev server and pre-built static assets via per-app nginx include files in `nginx-frontends/`. The `frontend-modes.conf` file controls which mode each app uses.
+
+### VS Code (code-server)
+
+A VS Code instance (code-server) is proxied at `/apps/code-server/` and appears in the nav as "VS Code" under the System section. It's an iframe embedding the code-server web UI.
 
 ### Docker mode
 
@@ -193,7 +202,7 @@ The Logs app provides a web UI to browse and tail these files.
 
 ### Duplicated Conversation Configuration
 
-Multiple apps create agent conversations independently (Conversations, Scheduled, SMS) and each one assembles the conversation payload itself — reading `assistant-settings.json`, `secrets.json`, `mcp.json`, default tool lists, etc. This means the logic for "how to start a conversation with the right config" is duplicated across all three backends. If you change how secrets are injected, add a new default tool, or alter the MCP payload shape, you need to update every app that creates conversations or they'll silently diverge. This is the biggest maintenance footprint in the project and a likely source of subtle bugs.
+Multiple apps create agent conversations independently (Code, Vibe, Scheduled, SMS) and each one assembles the conversation payload itself. Common setup logic (fetching skills, MCP config, secrets) has been extracted to `apps/shared/utils/conversationSetup.ts` for the frontend apps, but each app still has its own `createConversation` function with app-specific behavior (e.g. Code adds control bar settings and delegation; Vibe adds the vibecoding system prompt and artifact workspace). The Scheduled and SMS backends duplicate this logic in Python. If you change how secrets are injected, add a new default tool, or alter the MCP payload shape, you need to update every app that creates conversations or they'll silently diverge.
 
 ### Paths and routing
 

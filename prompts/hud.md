@@ -29,10 +29,11 @@ port: 4021,
 resolve.alias: {
   '@openhands/typescript-client': '/root/git/typescript-client/dist/index.js',
   '@assistant': '<...>/apps/conversations/src',
+  '@shared': '<...>/apps/shared',
 },
 ```
 
-The `@assistant` alias allows importing hooks from the conversations app.
+The `@assistant` alias allows importing hooks from the conversations app. The `@shared` alias provides access to shared components and hooks (ConversationList, ChatView, useSettings, useProjects, etc.).
 
 ### Source Structure
 

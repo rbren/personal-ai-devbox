@@ -29,11 +29,12 @@ port: 4025,
 resolve.alias: {
   '@openhands/typescript-client': '/root/git/typescript-client/dist/index.js',
   '@hud': '<...>/apps/hud/src',
+  '@shared': '<...>/apps/shared',
   '@assistant': '<...>/apps/conversations/src',
 },
 ```
 
-The `@hud` alias imports HUD hooks and components; `@assistant` imports conversation hooks from the conversations app.
+The `@hud` alias imports HUD hooks and components; `@shared` provides shared components and hooks; `@assistant` imports conversations-specific hooks.
 
 ### Source Structure
 
