@@ -44,87 +44,89 @@ good luck have fun
 
 ## Features
 
-### Code (Conversations)
+### [Code](prompts/code.md)
 
 Chat UI for creating and streaming agent conversations using the [OpenHands SDK](https://github.com/OpenHands/software-agent-sdk). Includes a control bar for tuning agent behavior (planning depth, verification, git strategy), a resizable git status panel, and support for subagent delegation.
 
-![conversations](prompts/conversations.png)
+![code](prompts/code.png)
 
-### Vibe
+### [Vibe](prompts/vibe.md)
 
 Chat-first vibecoding interface for rapid prototyping. The agent builds HTML/CSS/JS artifacts that render live in a preview pane next to the chat. Uses its own agent-server instance and artifact storage.
 
-### Kanban
+![vibe](prompts/vibe.png)
+
+### [Kanban](prompts/kanban.md)
 
 Kanban board of conversations organized by project and execution status.
 
 ![kanban](prompts/kanban.png)
 
-### HUD
+### [HUD](prompts/hud.md)
 
 Draggable card dashboard for monitoring live conversations in real time.
 
 ![hud](prompts/hud.png)
 
-### LLM
+### [LLM](prompts/llm.md)
 
 Settings page for choosing an LLM provider, model, and API key.
 
-### Secrets
+### [Secrets](prompts/secrets.md)
 
 Key-value secret store injected into new conversations.
 
 ![secrets](prompts/secrets.png)
 
-### Projects
+### [Projects](prompts/projects.md)
 
 Git repository overview for all projects under `~/git/`.
 
 ![projects](prompts/projects.png)
 
-### Scheduled
+### [Scheduled](prompts/scheduled.md)
 
 Cron-based scheduler that launches agent conversations on a timer.
 
 ![scheduled](prompts/scheduled.png)
 
-### Skills
+### [Skills](prompts/skills.md)
 
 CRUD editor for agent skills stored in the agentskills.io format.
 
 ![skills](prompts/skills.png)
 
-### MCP
+### [MCP](prompts/mcp.md)
 
 Configuration editor for Model Context Protocol servers.
 
 ![mcp](prompts/mcp.png)
 
-### SMS
+### [SMS](prompts/sms.md)
 
 Twilio webhook that creates agent conversations from incoming text messages.
 
 ![sms](prompts/sms.png)
 
-### Status
+### [Status](prompts/status.md)
 
 Live system monitor showing CPU, memory, disk, processes, and network.
 
 ![status](prompts/status.png)
 
-### Terminal
+### [Terminal](prompts/terminal.md)
 
 Multi-tab browser terminal backed by real PTY processes.
 
 ![terminal](prompts/terminal.png)
 
-### Files
+### [Files](prompts/files.md)
 
 File browser and text editor for the server's filesystem.
 
 ![files](prompts/files.png)
 
-### Logs
+### [Logs](prompts/logs.md)
 
 Log viewer with live tailing and syntax highlighting.
 

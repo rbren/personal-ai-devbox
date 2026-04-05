@@ -9,7 +9,7 @@ Kanban board view of all agent conversations, organized into columns by status a
 | Component | Port |
 |-----------|------|
 | Frontend  | 4025 |
-| Backend   | — (uses conversations backend on 4004) |
+| Backend   | — (uses Code backend on 4004) |
 
 ## Backend
 
@@ -34,7 +34,7 @@ resolve.alias: {
 },
 ```
 
-The `@hud` alias imports HUD hooks and components; `@shared` provides shared components and hooks; `@assistant` imports conversations-specific hooks.
+The `@hud` alias imports HUD hooks and components; `@shared` provides shared components and hooks; `@assistant` imports Code-specific hooks.
 
 ### Source Structure
 

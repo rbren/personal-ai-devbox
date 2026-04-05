@@ -1,7 +1,7 @@
 # Code App (Conversations)
 
 
-![conversations screenshot](conversations.png)
+![code screenshot](code.png)
 Chat UI for interacting with OpenHands agent conversations. This is the primary app for coding tasks — it creates, lists, and streams conversations running on the OpenHands agent server. (The tab is labeled "Code" in the nav, though the app directory is still `apps/conversations/`.)
 
 ## Ports
@@ -14,7 +14,7 @@ Chat UI for interacting with OpenHands agent conversations. This is the primary 
 
 ## Backend
 
-The conversations app relies on the [OpenHands agent-server](https://github.com/All-Hands-AI/OpenHands) from the `software-agent-sdk` project, running on port 4004. It also has its own lightweight **git backend** on port 4044.
+The Code app relies on the [OpenHands agent-server](https://github.com/All-Hands-AI/OpenHands) from the `software-agent-sdk` project, running on port 4004. It also has its own lightweight **git backend** on port 4044.
 
 ### Starting the Agent Server
 
@@ -152,7 +152,7 @@ When **standalone**:
 
 ### Settings
 
-LLM settings (model, API key, base URL, session key) are configured in the separate **LLM app** (`apps/llm/`, see `prompts/llm.md`), not in the conversations app.
+LLM settings (model, API key, base URL, session key) are configured in the separate **LLM app** (`apps/llm/`, see `prompts/llm.md`), not in the Code app.
 
 The `useSettings` hook (from `@shared`) reads settings from `localStorage` (key `openhands-chat-settings`) and listens for `storage` events so changes made in the LLM app propagate immediately across iframes without a page reload.
 

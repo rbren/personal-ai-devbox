@@ -26,7 +26,7 @@ The OpenHands agent server (port 4004) is the backend for all conversation-relat
 - A collapsible left sidebar (collapsed by default) with nav links grouped into **Agents**, **Settings**, and **System** sections. Collapsed mode shows only icons with slide-out drawer labels on hover.
 - A set of hidden `<iframe>` elements, one per app. Clicking a nav item shows the corresponding iframe and lazy-loads its `src` on first activation.
 - URL routing: paths like `/conversations`, `/status`, `/files`, etc. all serve `index.html` via nginx, and the shell JavaScript activates the matching iframe.
-- The conversations and vibe apps communicate with the parent shell via `postMessage` to keep the browser URL in sync when navigating between conversations.
+- The Code and Vibe apps communicate with the parent shell via `postMessage` to keep the browser URL in sync when navigating between conversations.
 - A **Power Cycle** button at the bottom of the nav that POSTs to `/apps/status/api/restart`, polls until the status backend is back up, then reloads all visible iframes.
 - A **mini chat FAB** (floating action button) in the bottom-right corner — an Intercom-style quick chat that creates lightweight agent conversations for quick questions without leaving the current page. The mini chat agent has limited tools (file_editor, glob, grep) and a custom system prompt loaded from `homepage/mini-chat-prompt.j2`.
 
@@ -37,7 +37,7 @@ Each app lives in `apps/<name>/` and follows a consistent structure:
 ### Frontend
 
 - **Stack:** React + Vite + Tailwind CSS
-- **Location:** `apps/<name>/frontend/` (or app root for conversations/hud/kanban)
+- **Location:** `apps/<name>/frontend/` (or app root for Code/hud/kanban)
 - **Entry point:** `src/App.jsx` (or `.tsx` for TypeScript apps)
 - **Vite config:** `base: '/apps/<name>/'`, dev server on an assigned port
 - **Dark theme:** background `#0f1117`, borders `#2a2d3e`, text `#e2e8f0`
@@ -59,7 +59,7 @@ Each app has a `start.sh` that launches the backend (uvicorn) and frontend (npm 
 | App           | Frontend | Backend |
 |---------------|----------|---------|
 | status        | 4001     | 4002    |
-| conversations | 4003     | 4004 (agent-server), 4044 (git) |
+| code          | 4003     | 4004 (agent-server), 4044 (git) |
 | files         | 4005     | 4006    |
 | projects      | 4007     | 4008    |
 | secrets       | 4009     | 4010    |
@@ -78,8 +78,8 @@ Each app has a `start.sh` that launches the backend (uvicorn) and frontend (npm 
 
 Several apps share code via Vite aliases:
 
-- **`@openhands/typescript-client`**: A local build of the [OpenHands TypeScript client](https://github.com/openhands/typescript-client) at `~/git/typescript-client/dist/`. Used by conversations, vibe, hud, and kanban for talking to the agent server. See [`prompts/agent-server.md`](agent-server.md) for API details and the typescript-client's [`frontend.md` skill](https://github.com/OpenHands/typescript-client/blob/main/.agent/skills/frontend.md) for React integration patterns.
-- **`@shared`**: Points to `apps/shared/` — shared components (ConversationList, ChatView, EventBubble, ActionGroup), hooks (useSettings, useConversationList, useAgentConversation, useProjects), and utilities (conversationSetup, eventHelpers, markdownComponents). Used by conversations, vibe, hud, and kanban.
+- **`@openhands/typescript-client`**: A local build of the [OpenHands TypeScript client](https://github.com/openhands/typescript-client) at `~/git/typescript-client/dist/`. Used by Code, vibe, hud, and kanban for talking to the agent server. See [`prompts/agent-server.md`](agent-server.md) for API details and the typescript-client's [`frontend.md` skill](https://github.com/OpenHands/typescript-client/blob/main/.agent/skills/frontend.md) for React integration patterns.
+- **`@shared`**: Points to `apps/shared/` — shared components (ConversationList, ChatView, EventBubble, ActionGroup), hooks (useSettings, useConversationList, useAgentConversation, useProjects), and utilities (conversationSetup, eventHelpers, markdownComponents). Used by Code, vibe, hud, and kanban.
 - **`@assistant`**: Points to `apps/conversations/src/` — allows hud and kanban to import conversations-specific hooks and components.
 - **`@hud`**: Points to `apps/hud/src/` — allows kanban to import HUD hooks and components.
 
@@ -89,7 +89,7 @@ Most app state is stored as JSON files under `~/.openhands/remote/`:
 
 | File | Used by |
 |------|---------|
-| `secrets.json` | Secrets app; also injected into conversations by SMS and Scheduled apps |
+| `secrets.json` | Secrets app; also injected into conversations by the SMS and Scheduled apps |
 | `assistant-settings.json` | LLM, Scheduled, SMS, Conversations — stores `agentServerUrl`, `model`, `apiKey`, `sessionKey`, `baseUrl` |
 | `mcp.json` | MCP app — stores MCP server configurations |
 | `sms-messages.json` | SMS app — log of received SMS messages |
@@ -112,7 +112,7 @@ Key behaviors:
 - **HTTP → HTTPS redirect** on port 80 (except `/.well-known/acme-challenge/` for cert renewal)
 - **SSL termination** with Let's Encrypt certificates at `/etc/letsencrypt/live/your-domain.example.com/`
 - **Basic auth** on all routes (see below), except `/apps/sms/api/` which is open for Twilio webhooks
-- **WebSocket support** for terminal and conversations backends (proxy headers `Upgrade` + `Connection`)
+- **WebSocket support** for terminal and Code app backends (proxy headers `Upgrade` + `Connection`)
 - **`merge_slashes off`** so file paths like `//tmp/file` pass through correctly
 - **Proxy timeout** of 3600s for the terminal WebSocket connection
 - Each app gets two `location` blocks: one for the frontend (Vite dev server) and one for the backend API
@@ -124,7 +124,7 @@ A VS Code instance (code-server) is proxied at `/apps/code-server/` and appears 
 
 ### Docker mode
 
-A separate `docker-nginx.conf` serves pre-built static assets from `dist/` directories instead of proxying to Vite dev servers. The conversations API proxy is injected at runtime via `sed` when `AGENT_SERVER_URL` is set.
+A separate `docker-nginx.conf` serves pre-built static assets from `dist/` directories instead of proxying to Vite dev servers. The Code API proxy is injected at runtime via `sed` when `AGENT_SERVER_URL` is set.
 
 ## SSL / TLS
 
@@ -185,7 +185,7 @@ The project can also run as a Docker container (`Dockerfile`):
 1. Builds all frontends to static assets
 2. Starts all FastAPI backends via `docker-entrypoint.sh`
 3. Serves static frontends from `dist/` directories via nginx (no Vite dev servers)
-4. `AGENT_SERVER_URL` env var enables the conversations API proxy at runtime
+4. `AGENT_SERVER_URL` env var enables the Code API proxy at runtime
 5. Runs cron for scheduled tasks
 6. Exposes port 80 only (no SSL — intended to sit behind an external reverse proxy or load balancer)
 
@@ -208,7 +208,7 @@ Multiple apps create agent conversations independently (Code, Vibe, Scheduled, S
 
 The architecture of putting sub apps into iframes makes routing a little tricky. You should set up nginx to allow
 deep linking. E.g. the user might want to load /conversations/{id}. This should show the chrome on the homepage,
-then load the iframe so that the conversations UI shows the conversation. You will probably need to mess with
+then load the iframe so that the Code UI shows the conversation. You will probably need to mess with
 history state directly to support deep linking and the back button at the same time.
 
 ## Security

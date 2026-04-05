@@ -26,7 +26,7 @@ contribute back to this repository (https://github.com/rbren/personal-ai-devbox)
 | `prompts/skills.md` | Skill (SKILL.md) CRUD editor |
 | `prompts/logs.md` | Log file viewer with tailing |
 | `prompts/mcp.md` | MCP server configuration editor (`~/.openhands/remote/mcp.json`) |
-| `prompts/conversations.md` | Code (conversations) app: chat UI with control bar, git status, delegation, shared components |
+| `prompts/code.md` | Code app: chat UI with control bar, git status, delegation, shared components |
 | `prompts/vibe.md` | Vibe app: chat-first vibecoding interface with live artifact preview |
 | `prompts/llm.md` | LLM settings page (model, API key, base URL) — reads model list from agent-server |
 | `prompts/scheduled.md` | Cron-based scheduled conversation launcher |
@@ -60,23 +60,23 @@ These apps have no build-time or runtime dependencies on other apps. They can al
 
 ### Phase 2 — Conversations + Vibe (after Phase 0, parallelizable)
 
-**`prompts/conversations.md`** and **`prompts/vibe.md`**
+**`prompts/code.md`** and **`prompts/vibe.md`**
 
-Both require `@openhands/typescript-client` (built from `~/git/typescript-client`) and shared components from `apps/shared/`. The conversations app must be built before HUD and Kanban (they import from `apps/conversations/src/`). Vibe is independent of conversations.
+Both require `@openhands/typescript-client` (built from `~/git/typescript-client`) and shared components from `apps/shared/`. The Code app must be built before HUD and Kanban (they import from `apps/conversations/src/`). Vibe is independent of conversations.
 
-Both require the [OpenHands agent-server](https://github.com/All-Hands-AI/OpenHands) at runtime — conversations on port 4004, vibe on port 4041.
+Both require the [OpenHands agent-server](https://github.com/All-Hands-AI/OpenHands) at runtime — Code on port 4004, vibe on port 4041.
 
 ### Phase 3 — HUD (after Phase 2)
 
 **`prompts/hud.md`**
 
-Imports hooks and components from `apps/conversations/src/` via the `@assistant` Vite alias, and from `apps/shared/` via `@shared`. Must be built after conversations.
+Imports hooks and components from `apps/conversations/src/` via the `@assistant` Vite alias, and from `apps/shared/` via `@shared`. Must be built after Code.
 
 ### Phase 4 — Kanban (after Phase 3)
 
 **`prompts/kanban.md`**
 
-Imports from `apps/hud/src/` (`@hud` alias), `apps/conversations/src/` (`@assistant` alias), and `apps/shared/` (`@shared`). Must be built after both conversations and hud.
+Imports from `apps/hud/src/` (`@hud` alias), `apps/conversations/src/` (`@assistant` alias), and `apps/shared/` (`@shared`). Must be built after both Code and hud.
 
 ### Phase 5 — Agent-server–dependent apps (after Phase 1, parallelizable)
 
@@ -101,10 +101,10 @@ architecture.md + agent-server.md
  ├── mcp.md           ──┤
  ├── llm.md           ──┘
  │
- ├── conversations.md  ─┐    ← Phase 2 (parallel)
+ ├── code.md           ─┐    ← Phase 2 (parallel)
  ├── vibe.md           ─┘
  │    │
- │    └── hud.md              ← Phase 3 (after conversations)
+ │    └── hud.md              ← Phase 3 (after Code)
  │         └── kanban.md      ← Phase 4
  │
  └── scheduled.md  ─┐
@@ -116,10 +116,10 @@ architecture.md + agent-server.md
 These are the constraints that **must not** be violated:
 
 1. **`prompts/architecture.md` before everything.** It creates the directory structure, nginx config, homepage shell, and shared dependencies that all apps assume exist.
-2. **`apps/shared/` before conversations, vibe, hud, or kanban.** All four apps import shared components and hooks via the `@shared` Vite alias.
-3. **`prompts/conversations.md` before `prompts/hud.md`.** HUD imports React hooks and components from `apps/conversations/src/` at build time.
+2. **`apps/shared/` before Code, vibe, hud, or kanban.** All four apps import shared components and hooks via the `@shared` Vite alias.
+3. **`prompts/code.md` before `prompts/hud.md`.** HUD imports React hooks and components from `apps/conversations/src/` at build time.
 4. **`prompts/hud.md` before `prompts/kanban.md`.** Kanban imports from `apps/hud/src/` at build time.
-5. **`@openhands/typescript-client` built before conversations, vibe, hud, or kanban.** All four apps resolve this package via a Vite alias to `~/git/typescript-client/dist/`. The architecture phase should clone and build it.
+5. **`@openhands/typescript-client` built before Code, vibe, hud, or kanban.** All four apps resolve this package via a Vite alias to `~/git/typescript-client/dist/`. The architecture phase should clone and build it.
 
 ## Soft Dependencies
 
@@ -127,12 +127,12 @@ These are runtime-only; violating them won't break the build but will cause runt
 
 - **`prompts/secrets.md`** should exist before **`prompts/sms.md`** and **`prompts/scheduled.md`** — they read `~/.openhands/remote/secrets.json` to inject secrets into new conversations.
 - **`prompts/mcp.md`** should exist before **`prompts/sms.md`** and **`prompts/scheduled.md`** — they read `~/.openhands/remote/mcp.json` to include MCP config in conversations.
-- **The OpenHands agent-server** must be running on port 4004 for conversations, scheduled, and sms to function at runtime. A second instance on port 4041 is needed for vibe.
+- **The OpenHands agent-server** must be running on port 4004 for Code, scheduled, and sms to function at runtime. A second instance on port 4041 is needed for vibe.
 
 ## Tips for Subagent Delegation
 
-- **Give each subagent one prompt file** plus `prompts/architecture.md` as context so it understands the overall conventions (port assignments, directory layout, dark theme colors, API prefix pattern, etc.). For apps that interact with the agent server (conversations, vibe, hud, kanban, scheduled, sms), also include `prompts/agent-server.md`.
+- **Give each subagent one prompt file** plus `prompts/architecture.md` as context so it understands the overall conventions (port assignments, directory layout, dark theme colors, API prefix pattern, etc.). For apps that interact with the agent server (Code, vibe, hud, kanban, scheduled, sms), also include `prompts/agent-server.md`.
 - **Phase 1 apps are ideal for parallel subagents** — they're self-contained, follow the exact same frontend/backend pattern, and have zero cross-app imports.
-- **Conversations and Vibe can be built in parallel** in Phase 2. Both use `@shared` but don't depend on each other.
-- **Phases 2–4 must be sequential** due to the import chain (conversations → hud → kanban). A single subagent handling all three may be simpler than coordinating handoffs.
+- **Code and Vibe can be built in parallel** in Phase 2. Both use `@shared` but don't depend on each other.
+- **Phases 2–4 must be sequential** due to the import chain (Code → hud → kanban). A single subagent handling all three may be simpler than coordinating handoffs.
 - **After all apps are built**, a final agent should wire up `homepage/index.html` (nav items + iframe entries), update `nginx.conf` with all location blocks, and run a smoke test.

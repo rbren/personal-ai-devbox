@@ -1,6 +1,6 @@
 # Vibe App
 
-Chat-first interface for rapid prototyping and vibecoding. Unlike the Code (conversations) app which is focused on working within existing repos, Vibe is a creative canvas: the user describes what they want, and the agent builds it as a live-rendered artifact.
+Chat-first interface for rapid prototyping and vibecoding. Unlike the Code app which is focused on working within existing repos, Vibe is a creative canvas: the user describes what they want, and the agent builds it as a live-rendered artifact.
 
 ## Ports
 
@@ -14,7 +14,7 @@ Chat-first interface for rapid prototyping and vibecoding. Unlike the Code (conv
 
 The Vibe app has three processes:
 
-1. **Agent server** (port 4041) — a separate OpenHands agent-server instance with its own conversation store (`workspace/vibe-conversations`). This is independent from the main conversations agent-server on port 4004.
+1. **Agent server** (port 4041) — a separate OpenHands agent-server instance with its own conversation store (`workspace/vibe-conversations`). This is independent from the main Code agent-server on port 4004.
 2. **Artifacts API** (port 4042) — a small FastAPI service that lists, serves, and git-commits artifact files.
 3. **Frontend** (port 4040) — React + Vite + TypeScript UI.
 
@@ -120,7 +120,7 @@ Each conversation gets a custom system prompt (built in `createConversation.ts`)
 - `/apps/vibe/` — no conversation selected
 - `/apps/vibe/{id}` — specific conversation open
 
-Embedded iframe behavior is the same pattern as the conversations app: `postMessage` to parent for URL sync, parent relays via `vibe-navigate`/`vibe-select` messages.
+Embedded iframe behavior is the same pattern as the Code app: `postMessage` to parent for URL sync, parent relays via `vibe-navigate`/`vibe-select` messages.
 
 ### Shared Code
 
