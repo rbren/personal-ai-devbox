@@ -2,7 +2,7 @@
 
 
 ![mcp screenshot](mcp.png)
-Configuration editor for Model Context Protocol (MCP) servers. Stores the config in `~/.openhands/remote/mcp.json`, which is read by the conversations, SMS, and scheduled apps when creating new agent conversations.
+Configuration editor for Model Context Protocol (MCP) servers. Stores the config in `~/.openhands/remote/mcp.json`, which is read by the Code, SMS, and Scheduled apps when creating new agent conversations.
 
 ## Ports
 
@@ -40,7 +40,7 @@ This structure is passed directly as `mcp_config` in the agent conversation payl
 
 #### `GET /api/config`
 
-Returns the full `mcp.json` dict (used by the conversations app to include in conversation payloads).
+Returns the full `mcp.json` dict (used by the Code app to include in conversation payloads).
 
 #### `GET /api/servers`
 

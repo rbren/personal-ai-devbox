@@ -1,6 +1,6 @@
 # LLM Settings App
 
-Dedicated settings page for configuring which LLM provider, model, and API key the agent uses. Extracted from the conversations app's former `SettingsModal` into its own micro-app so it appears as a standalone page in the Settings nav section.
+Dedicated settings page for configuring which LLM provider, model, and API key the agent uses. Extracted from the Code app's former `SettingsModal` into its own micro-app so it appears as a standalone page in the Settings nav section.
 
 ## Ports
 
@@ -56,15 +56,15 @@ Proxies the model list from the OpenHands agent-server (`http://localhost:4004`)
 - **Provider/Model dropdowns**: models are grouped by provider. Changing provider auto-selects the first model. The saved model is resolved to its provider when the model list loads.
 - **Verified only toggle**: switches between the agent-server's verified model list and the full list. Reloads models on toggle.
 - **Advanced toggle**: reveals the Base URL field (auto-expanded if a base URL is already saved).
-- **Save**: `PUT /api/settings` to persist to disk, then writes `{ model, apiKey, sessionKey }` to `localStorage` key `openhands-chat-settings` so the conversations app picks up changes immediately.
+- **Save**: `PUT /api/settings` to persist to disk, then writes `{ model, apiKey, sessionKey }` to `localStorage` key `openhands-chat-settings` so the Code app picks up changes immediately.
 - **Error display**: if model loading fails (e.g. bad session key), shows the error inline above the dropdowns.
 
 ### Cross-App Settings Sync
 
-The LLM app and conversations app share settings via two mechanisms:
+The LLM app and Code app share settings via two mechanisms:
 
-1. **Disk** (`~/.openhands/remote/assistant-settings.json`): the LLM backend writes here, the conversations `useSettings` hook reads from here via `GET /apps/llm/api/settings`.
-2. **localStorage** (key `openhands-chat-settings`): the LLM frontend writes here on save. The conversations app's `useSettings` hook listens for `storage` events so changes propagate immediately across iframes without a page reload.
+1. **Disk** (`~/.openhands/remote/assistant-settings.json`): the LLM backend writes here, the Code app's `useSettings` hook reads from here via `GET /apps/llm/api/settings`.
+2. **localStorage** (key `openhands-chat-settings`): the LLM frontend writes here on save. The Code app's `useSettings` hook listens for `storage` events so changes propagate immediately across iframes without a page reload.
 
 ### API
 

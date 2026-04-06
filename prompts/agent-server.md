@@ -1,6 +1,6 @@
 # Agent Server
 
-The OpenHands agent server is the backend that powers every conversation in this project. It's a FastAPI application from the [OpenHands Software Agent SDK](https://github.com/OpenHands/software-agent-sdk) that exposes REST and WebSocket APIs for creating, running, and streaming AI agent conversations. The conversations, HUD, kanban, scheduled, and SMS apps all talk to it.
+The OpenHands agent server is the backend that powers every conversation in this project. It's a FastAPI application from the [OpenHands Software Agent SDK](https://github.com/OpenHands/software-agent-sdk) that exposes REST and WebSocket APIs for creating, running, and streaming AI agent conversations. The Code, HUD, kanban, scheduled, and SMS apps all talk to it.
 
 ## Source & Documentation
 
@@ -246,7 +246,7 @@ The typescript-client repo includes a [`frontend.md` skill](https://github.com/O
 - Authentication setup
 - Tool configuration
 
-This skill is the best reference for building or modifying the conversations, HUD, and kanban apps.
+This skill is the best reference for building or modifying the Code, HUD, and kanban apps.
 
 ### Key TypeScript Classes
 
@@ -305,8 +305,8 @@ In this project's architecture:
 - The agent server runs on **port 4004** (see `prompts/architecture.md`)
 - nginx proxies `/apps/conversations/api/` → `http://127.0.0.1:4004/` (note: no `/api/` prefix stripping — the agent server's own route structure is used directly)
 - WebSocket upgrade headers are passed through for real-time streaming
-- The **conversations** app is the primary frontend — it uses `@openhands/typescript-client` to create and stream conversations
-- The **HUD** and **kanban** apps import hooks from the conversations app and also use the typescript-client
+- The **Code** app is the primary frontend — it uses `@openhands/typescript-client` to create and stream conversations
+- The **HUD** and **kanban** apps import hooks from the Code app and also use the typescript-client
 - The **scheduled** and **SMS** apps create conversations by POSTing directly to the agent server's REST API from their Python backends
 - Configuration for the agent server connection is stored in `~/.openhands/remote/assistant-settings.json`
 

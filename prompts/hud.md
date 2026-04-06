@@ -9,7 +9,7 @@ Heads-up display for monitoring live agent conversations. Shows conversations as
 | Component | Port |
 |-----------|------|
 | Frontend  | 4021 |
-| Backend   | — (uses conversations backend on 4004) |
+| Backend   | — (uses Code backend on 4004) |
 
 ## Backend
 
@@ -29,10 +29,11 @@ port: 4021,
 resolve.alias: {
   '@openhands/typescript-client': '/root/git/typescript-client/dist/index.js',
   '@assistant': '<...>/apps/conversations/src',
+  '@shared': '<...>/apps/shared',
 },
 ```
 
-The `@assistant` alias allows importing hooks from the conversations app.
+The `@assistant` alias allows importing hooks from the Code app. The `@shared` alias provides access to shared components and hooks (ConversationList, ChatView, useSettings, useProjects, etc.).
 
 ### Source Structure
 

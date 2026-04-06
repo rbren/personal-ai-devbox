@@ -9,7 +9,7 @@ Kanban board view of all agent conversations, organized into columns by status a
 | Component | Port |
 |-----------|------|
 | Frontend  | 4025 |
-| Backend   | — (uses conversations backend on 4004) |
+| Backend   | — (uses Code backend on 4004) |
 
 ## Backend
 
@@ -29,11 +29,12 @@ port: 4025,
 resolve.alias: {
   '@openhands/typescript-client': '/root/git/typescript-client/dist/index.js',
   '@hud': '<...>/apps/hud/src',
+  '@shared': '<...>/apps/shared',
   '@assistant': '<...>/apps/conversations/src',
 },
 ```
 
-The `@hud` alias imports HUD hooks and components; `@assistant` imports conversation hooks from the conversations app.
+The `@hud` alias imports HUD hooks and components; `@shared` provides shared components and hooks; `@assistant` imports Code-specific hooks.
 
 ### Source Structure
 
